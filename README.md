@@ -27,6 +27,8 @@ Performance metrics - For each model
 Conclusions -
 - Random Forest outperforms the other two.
 - Performance remains unchanged on removal of lowest three features as per their gain ratios.  
+- This showed that redundant features existed in the orginal feature set and their removal did not result 
+  in any information loss.
 ****************************************************************************************************************************
 To compile and run -
 python Classification.py
