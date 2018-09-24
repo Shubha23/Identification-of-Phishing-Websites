@@ -1,9 +1,12 @@
 '''
 # Aim - Classification of phishing and benign websites.
+# Recursive feature elimination (RFE) is applied to remove lowest 3 features as per their gain ratio (see note below)
 # Algorithms applied - Random Forest Classifier, Logistic Regression and SVM
 # Performance metrics - For each model, generates ROC plots, accuracy_score and confusion matrix.
-
-*To do - Apply feature selection to acheive best feature subset
+*Note - GainRatioAttribute eval using Ranker's method was applied in Weka-3.8 software GUI to achieve 
+        ranking of all features based on their gain ratio. 
+        After applying brute-force method, it was found that eliminating lowest 3 features maintain the
+        performance of classifiers at the same level, thereby showing redundancy of features in original set.
 '''
 import numpy as np  
 import matplotlib.pyplot as plt
@@ -85,6 +88,32 @@ plt.legend(loc ='lower right')
 print("Conf matrix SVM-linear:",confusion_matrix(y_test,prediction))
 
 plt.show()
+
+'''
+# -------- Apply Recursive Feature Elimination(RFE) and use reduced feature set for prediction ------------------------
+# Recursive Feature Elimination(RFE) is a technique that takes entire feature set as input and removes features one at 
+# a time up to a specified number or until a stopping criteria is met.
+'''
+from sklearn.feature_selection import RFE
+rfe = RFE(rfc,27)                              
+rfe = rfe.fit(X_train, y_train)               # Train RF classifier with only 27 features now
+pred = rfe.predict(X_test)
+
+# Test accuracy on reduced data
+print("Accuracy by RFClassifier after RFE is applied:", accuracy_score(y_test,pred))
+
+rfe = RFE(svc_l,27)
+rfe = rfe.fit(X_train, y_train)               # Train SVM with only 27 features now
+pred = rfe.predict(X_test)
+print("Accuracy by SVM-Linear after RFE is applied:", accuracy_score(y_test,pred))
+
+rfe = RFE(logreg,27)
+rfe = rfe.fit(X_train, y_train)              # Train Logistic-Reg with only 27 features now
+pred = rfe.predict(X_test)
+print("Accuracy by Logistic Regression after RFE is applied:", accuracy_score(y_test,pred))
+
+############################################ END OF fILE #####################################################################
+
 
 
 
