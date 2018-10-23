@@ -24,8 +24,14 @@ print(data.tail())
 
 # Describe statistical information of data
 print(data.describe())
+# Above stats show that 75 percentile of obseravtions belong to class 1 
+
 # Check column types
 print(data.info())                # All comumns are int type, so no change is required
+
+# Plot distribution of classes using Histograms
+plt.figure(figsize =(8,8))
+plt.hist(data.Result)            # It shows that benign class have about 1000+ observations than malware
 
 # Look for missing values
 print(data.isnull().sum())        # No missing values found, so no need to drop or replace any value
@@ -33,9 +39,19 @@ print(data.isnull().sum())        # No missing values found, so no need to drop 
 # Generate correlation matrix
 print(data.corr())
 
+plt.figure(figsize =(8,8))
+sns.heatmap(dataframe.corr())    # Generate heatmap (though very less clarity due to large no. of ftrs
+
+print(dataframe.corr()['Result'].sort_values())      # Print correlation with target variable
+
+# Remove features having correlation coeff. between +/- 0.03
+dataframe.drop(['Favicon','Iframe','Redirect',
+                'popUpWidnow','RightClick','Submitting_to_email'],axis=1,inplace=True)
+print(len(dataframe.columns))
+
 # Prepare data for models
-X = np.array(data)[:,:30]
-y = np.array(data)[:,30]
+y = dataframe['Result'].values
+X = dataframe.drop(['Result'], axis = 1)
 
 # Split the data as training and testing data - 70% train size, 30% test size
 X_train, X_test, y_train, y_test  = train_test_split(X, y, test_size = 0.3, random_state = None)
