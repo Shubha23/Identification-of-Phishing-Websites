@@ -14,6 +14,7 @@ from sklearn.cross_validation import train_test_split
 import pandas as pd
 from sklearn.metrics import accuracy_score,roc_curve,auc, confusion_matrix
 from sklearn import preprocessing
+import seaborn as sns
 
 # Read the data
 data = pd.read_csv('./Dataset.csv')
@@ -40,18 +41,18 @@ print(data.isnull().sum())        # No missing values found, so no need to drop 
 print(data.corr())
 
 plt.figure(figsize =(8,8))
-sns.heatmap(dataframe.corr())    # Generate heatmap (though very less clarity due to large no. of ftrs
+sns.heatmap(data.corr())    # Generate heatmap (though very less clarity due to large no. of ftrs
 
-print(dataframe.corr()['Result'].sort_values())      # Print correlation with target variable
+print(data.corr()['Result'].sort_values())      # Print correlation with target variable
 
 # Remove features having correlation coeff. between +/- 0.03
-dataframe.drop(['Favicon','Iframe','Redirect',
+data.drop(['Favicon','Iframe','Redirect',
                 'popUpWidnow','RightClick','Submitting_to_email'],axis=1,inplace=True)
-print(len(dataframe.columns))
+print(len(data.columns))
 
 # Prepare data for models
-y = dataframe['Result'].values
-X = dataframe.drop(['Result'], axis = 1)
+y = data['Result'].values
+X = data.drop(['Result'], axis = 1)
 
 # Split the data as training and testing data - 70% train size, 30% test size
 X_train, X_test, y_train, y_test  = train_test_split(X, y, test_size = 0.3, random_state = None)
